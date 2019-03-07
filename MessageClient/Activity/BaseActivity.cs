@@ -1,13 +1,12 @@
 ﻿using Android.App;
 using Android.OS;
 using Android.Runtime;
-using MessageClient;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace MessageClinet
+namespace MessageClient
 {
     public class BaseActivity : Activity
     {

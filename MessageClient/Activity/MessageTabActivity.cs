@@ -12,14 +12,13 @@ using DBLogic;
 using DBModels;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using MessageClient;
-using MessageClinet.ViewHolder;
+using MessageClient.ViewHolder;
 using System;
 using System.IO;
 using System.Reflection;
 using Color = Android.Graphics.Color;
 
-namespace MessageClinet
+namespace MessageClient
 {
     [Activity(Label = "My Activity")]
     public class MessageTabActivity : BaseActivity

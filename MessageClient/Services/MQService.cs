@@ -8,7 +8,6 @@ using Common;
 using Common.LinkLayer;
 using DBLogic;
 using DBModels;
-using MessageClient;
 using MessageClient.Utils;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ using System.Data;
 using System.Reflection;
 using Utility;
 
-namespace MessageClinet.Services
+namespace MessageClient.Services
 {
     [Service]
     public class MQService : Service

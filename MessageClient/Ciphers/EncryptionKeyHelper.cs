@@ -9,7 +9,7 @@ using System;
 using Calendar = Android.Icu.Util.Calendar;
 using CalendarField = Android.Icu.Util.CalendarField;
 
-namespace MessageClinet.Ciphers
+namespace MessageClient.Ciphers
 {
     public class PlatformEncryptionKeyHelper
     {

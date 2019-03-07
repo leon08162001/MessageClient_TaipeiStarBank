@@ -6,7 +6,7 @@ using Java.Security.Spec;
 using System;
 using System.Reflection;
 
-namespace MessageClinet.Ciphers
+namespace MessageClient.Ciphers
 {
     public class RSAKeyPairGenerator : Activity
     {

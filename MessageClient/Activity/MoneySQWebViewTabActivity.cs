@@ -1,10 +1,9 @@
 ﻿using Android.App;
 using Android.OS;
 using Android.Webkit;
-using MessageClient;
 using System;
 
-namespace MessageClinet
+namespace MessageClient
 {
     [Activity(Label = "MoneySQWebViewTabActivity")]
     public class MoneySQWebViewTabActivity : BaseActivity

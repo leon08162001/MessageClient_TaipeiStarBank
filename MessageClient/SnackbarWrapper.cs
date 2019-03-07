@@ -5,10 +5,9 @@ using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Views;
 using Android.Widget;
-using MessageClient;
 using System;
 
-namespace MessageClinet
+namespace MessageClient
 {
     public class SnackbarWrapper
     {

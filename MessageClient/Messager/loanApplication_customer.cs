@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MessageClinet.Messager
+namespace MessageClient.Messager
 {
     public partial class loanApplication_customer
     {

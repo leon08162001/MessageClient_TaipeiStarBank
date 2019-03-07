@@ -8,11 +8,10 @@ using Common.Ciphers;
 using Common.LinkLayer;
 using DBLogic;
 using DBModels;
-using MessageClient;
 using MessageClient.Utils;
-using MessageClinet.Ciphers;
-using MessageClinet.Services;
-using MessageClinet.ViewHolder;
+using MessageClient.Ciphers;
+using MessageClient.Services;
+using MessageClient.ViewHolder;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -23,7 +22,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Utility;
 
-namespace MessageClinet
+namespace MessageClient
 {
     //[Activity( MainLauncher = true, Icon = "@drawable/moneysq")]
     [Activity(MainLauncher = true)]

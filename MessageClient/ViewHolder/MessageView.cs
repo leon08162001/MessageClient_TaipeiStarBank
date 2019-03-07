@@ -1,9 +1,8 @@
 ﻿using Android.Views;
 using Android.Widget;
 using Com.Lilarcor.Cheeseknife;
-using MessageClient;
 
-namespace MessageClinet.ViewHolder
+namespace MessageClient.ViewHolder
 {
     class MessageView : Java.Lang.Object
     {

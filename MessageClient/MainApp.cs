@@ -4,7 +4,7 @@ using Android.Net;
 using Android.Runtime;
 using Common;
 using DBLogic;
-using MessageClinet.Services;
+using MessageClient.Services;
 using System;
 using System.IO;
 using System.Net.Sockets;
@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MessageClinet
+namespace MessageClient
 {
     [Application(Icon = "@drawable/moneysq")]
     public class MainApp : Android.App.Application

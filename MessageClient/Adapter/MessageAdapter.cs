@@ -2,13 +2,12 @@
 using Android.Views;
 using Android.Widget;
 using DBModels;
-using MessageClient;
-using MessageClinet.ViewHolder;
+using MessageClient.ViewHolder;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace MessageClinet
+namespace MessageClient
 {
     public class MessageAdapter : BaseAdapter<MessageAddressee>
     {

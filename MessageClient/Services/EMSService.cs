@@ -13,9 +13,8 @@ using System.Data;
 using System.Reflection;
 using Utility;
 using MessageClient.Utils;
-using MessageClient;
 
-namespace MessageClinet.Services
+namespace MessageClient.Services
 {
     [Service]
     public class EMSService : Service

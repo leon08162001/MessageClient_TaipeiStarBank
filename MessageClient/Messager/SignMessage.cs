@@ -1,4 +1,4 @@
-﻿namespace MessageClinet.Messager
+﻿namespace MessageClient.Messager
 {
     public class SignMessage
     {

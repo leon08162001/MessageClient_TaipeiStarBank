@@ -4,14 +4,13 @@ using Android.Views;
 using Android.Widget;
 using DBLogic;
 using DBModels;
-using MessageClient;
-using MessageClinet.Services;
+using MessageClient.Services;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 
-namespace MessageClinet
+namespace MessageClient
 {
     [Activity(Label = "My Activity")]
     public class HisMessageTabActivity : BaseActivity

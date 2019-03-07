@@ -1,0 +1,19 @@
+https://neetteen.net/post/2017/03/21/alternative-way-to-access-android-view-from-acitvity-class-with-xamarin
+
+https://blog.xamarin.com/building-android-apps-with-entity-framework/
+
+custom ListView with radio button
+http://blog.xuite.net/a88370.a88370/cjoushua/72627458-Android+%E5%AD%B8%E7%BF%92%E7%AD%86%E8%A8%98-Custom+Listview
+https://stackoverflow.com/questions/7329856/how-to-use-radiogroup-in-listview-custom-adapter
+
+Custom AlertDialog example in Xamarin.Android
+http://www.appliedcodelog.com/2015/11/custom-alertdialog-example-in.html
+
+Custom Dialog with Xamarin Android
+http://valokafor.com/custom-dialog-xamarin-android/
+
+Optimize memory usage in Xamarin apps
+https://www.chipsncookies.com/2017/optimize-memory-usage-in-xamarin-apps/
+
+How to activemq in ssl
+https://stackoverflow.com/questions/32696121/how-to-activemq-in-ssl

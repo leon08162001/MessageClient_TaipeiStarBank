@@ -1,0 +1,66 @@
+using System;
+using System.Drawing;
+using Foundation;
+using UIKit;
+using System.Diagnostics;
+
+namespace MessageClient_ios
+{
+    public partial class GesturesViewController : UIViewController
+    {
+        public GesturesViewController(IntPtr handle) : base (handle)
+		{
+        }
+
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+
+            // Tap gesture
+            this.View.AddGestureRecognizer(new UITapGestureRecognizer(tap => 
+            {
+                Debug.WriteLine("Double Tap.");
+            }) 
+            { 
+                NumberOfTapsRequired = 2 // Double tap 
+            });
+
+            // Drag(Pan) gesture
+            this.View.AddGestureRecognizer(new UIPanGestureRecognizer(pan => 
+            {
+                var p = pan.TranslationInView(this.View);
+                var v = pan.VelocityInView(this.View);
+                Debug.WriteLine("Pan. transration:{0}, velocity:{1}", p, v);
+            }));
+
+            // Pinch gesture
+            this.View.AddGestureRecognizer(new UIPinchGestureRecognizer(pin => 
+            {
+                var scale = pin.Scale;
+                var v = pin.Velocity;
+                Debug.WriteLine("Pinch. scale:{0}, velocity:{1}", scale, v);
+            }));
+
+            // Swipe gesture
+            this.View.AddGestureRecognizer(new UISwipeGestureRecognizer(sw => 
+            {
+                Debug.WriteLine("Swipe.");
+            }));
+
+            // Rotate gesture
+            this.View.AddGestureRecognizer(new UIRotationGestureRecognizer(ro => 
+            {
+                var rotation = ro.Rotation;
+                var v = ro.Velocity;
+                Debug.WriteLine("Rotate. rotation:{0}, velocity:{1}", rotation, v);
+            }));
+
+            // Long press gesture
+            this.View.AddGestureRecognizer(new UILongPressGestureRecognizer(lp => 
+            {
+                Debug.WriteLine("Long press.");
+            }));
+
+        }
+    }
+}

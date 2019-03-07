@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:background="#ff80d8ff">
+    <TextView
+        android:id="@+id/titleLogin"
+        android:layout_height="32dp"
+        android:layout_width="match_parent"
+        android:text="ID Settings"
+        android:textSize="20dp"
+        android:textColor="#FFFFFF"
+        android:paddingTop="4dp"
+        android:background="#ff40c4ff"
+        android:typeface="sans"
+        android:textStyle="bold"
+        android:gravity="center" />
+    <TextView
+        android:id="@+id/lblNote"
+        android:layout_below="@+id/titleLogin"
+        android:layout_height="25dp"
+        android:layout_width="320dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="*請輸入欲接收推播的身分ID."
+        android:textColor="@android:color/holo_red_light"
+        android:textSize="14dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="2dp"
+        android:typeface="sans" />
+    <TextView
+        android:id="@+id/lblID"
+        android:layout_below="@+id/lblNote"
+        android:layout_height="25dp"
+        android:layout_width="170dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:text="ID:"
+        android:textColor="#000000"
+        android:textSize="18dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="2dp"
+        android:typeface="sans" />
+    <EditText
+        android:inputType="textEmailAddress"
+        android:id="@+id/txtID"
+        android:layout_below="@+id/lblID"
+        android:layout_height="28dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:hint="ID"
+        android:textColorHint="@android:color/holo_green_dark"
+        android:textColor="@android:color/black"
+        android:paddingLeft="5dp"
+        android:paddingTop="1dp"
+        android:textSize="18dp"
+        android:paddingBottom="1dp"
+        android:typeface="sans"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp" />
+    <LinearLayout
+        android:id="@+id/linearLayoutBtns"
+        android:layout_below="@+id/txtID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp">
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:textSize="14dp"
+            android:text="OK"
+            android:typeface="sans"
+            android:background="#ff0986be"
+            android:textColor="#ffffffff"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="5dp" />
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:textSize="14dp"
+            android:text="Cancel"
+            android:typeface="sans"
+            android:background="#ff0986be"
+            android:layout_marginLeft="5dp"
+            android:textColor="#ffffffff"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="5dp" />
+    </LinearLayout>
+</RelativeLayout>

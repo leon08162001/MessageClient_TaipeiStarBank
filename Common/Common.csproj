@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Common</AssemblyName>
+    <RootNamespace>Common</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD2_0;DROID;IOS</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="HandlerLayer\DBFactory.cs" />
+    <Compile Remove="HandlerLayer\OTA1ExportHandler.cs" />
+    <Compile Remove="HandlerLayer\OTA2ExportHandler.cs" />
+    <Compile Remove="HandlerLayer\OTAExportHandler.cs" />
+    <Compile Remove="LinkLayer\ITibcoAdapter.cs" />
+    <Compile Remove="Utility\Logger.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="DLL\Apache.NMS.ActiveMQ.dll" />
+    <Content Include="DLL\Apache.NMS.dll" />
+    <Content Include="DLL\log4net.dll" />
+    <Content Include="DLL\SmartThreadPool.dll" />
+    <Content Include="DLL\TIBCO.EMS.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Apache.NMS.ActiveMQ.NetStd" Version="1.7.2.4114" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="NLog" Version="4.5.10" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.3.37" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Apache.NMS.Stomp">
+      <HintPath>DLL\Apache.NMS.Stomp.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>DLL\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>DLL\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>DLL\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SmartThreadPool">
+      <HintPath>DLL\SmartThreadPool.dll</HintPath>
+    </Reference>
+    <Reference Include="TIBCO.EMS">
+      <HintPath>DLL\TIBCO.EMS.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

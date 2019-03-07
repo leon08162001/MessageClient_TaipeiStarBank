@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:backgroundTint="#f0f8ffff">
+    <TableLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tableLayout1"
+        android:layout_gravity="left"
+        android:orientation="horizontal"
+        android:weightSum="1">
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:gravity="left">
+            <TextView
+                android:text="No."
+                android:layout_height="wrap_content"
+                android:id="@+id/listNo"
+                android:layout_gravity="center_vertical"
+                android:textSize="15dp"
+                android:textColor="@android:color/background_light"
+                android:layout_weight="0.05" />
+            <TextView
+                android:text="主旨:"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView1"
+                android:layout_gravity="left"
+                android:textSize="18dp"
+                android:textColor="@android:color/background_light"
+                android:layout_weight="0.05" />
+            <TextView
+                android:layout_height="wrap_content"
+                android:id="@+id/listSubject"
+                android:layout_gravity="left"
+                android:textSize="18dp"
+                android:textColor="@android:color/background_light"
+                android:layout_weight="0.899" />
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:id="@+id/rdoMessageSelect"
+                android:layout_weight="0.001"
+                android:focusable="false"
+                android:buttonTint="#ffffffff" />
+        </TableRow>
+    </TableLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:id="@+id/listTime" />
+</LinearLayout>

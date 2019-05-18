@@ -22,11 +22,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Utility;
 using MessageClinet;
+using Android.Content.PM;
 
 namespace MessageClient
 {
     //[Activity( MainLauncher = true, Icon = "@drawable/moneysq")]
-    [Activity(MainLauncher = true)]
+    [Activity(MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : TabActivity
     {
         private GestureDetector _gestureDetector;

@@ -12,13 +12,13 @@ using DBLogic;
 using DBModels;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using MessageClient.ViewHolder;
+using MessageClinet.ViewHolder;
 using System;
 using System.IO;
 using System.Reflection;
 using Color = Android.Graphics.Color;
 
-namespace MessageClient
+namespace MessageClinet
 {
     [Activity(Label = "My Activity")]
     public class MessageTabActivity : BaseActivity
@@ -73,7 +73,7 @@ namespace MessageClient
                 //txtAttachments.TextFormatted = Android.Text.Html.FromHtml(value);
                 ////txtAttachments.SetText(value,TextView.BufferType.Normal);
                 //Linkify.AddLinks(txtAttachments,MatchOptions.All);
-                ////txtAttachments.MovementMethod = new Android.Text.Method.LinkMovementMethod();
+                txtAttachments.MovementMethod = new Android.Text.Method.ScrollingMovementMethod();
             }
             catch (Exception ex)
             {

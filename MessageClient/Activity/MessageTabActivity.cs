@@ -12,7 +12,8 @@ using DBLogic;
 using DBModels;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using MessageClinet.ViewHolder;
+using MessageClient;
+using MessageClient.ViewHolder;
 using System;
 using System.IO;
 using System.Reflection;
@@ -103,6 +104,7 @@ namespace MessageClinet
                     AttachmentsSetting();
                     //txtMessage.ScrollTo(0, 0);
                     scrollMessage.ScrollTo(0, 0);
+                    txtAttachments.MovementMethod = new Android.Text.Method.ScrollingMovementMethod();
                     this.Parent.Intent.RemoveExtra("HistroyMessage");
                 }
             }
@@ -175,7 +177,7 @@ namespace MessageClinet
                 DBProfile.ClearProfile(MainApp.GlobalVariable.DBFile.FullName);
                 DBProfile.InsertProfile(Profile, MainApp.GlobalVariable.DBFile.FullName);
                 builder.Dismiss();
-                Intent MqService = new Intent(this, typeof(Services.MQService));
+                Intent MqService = new Intent(this, typeof(MessageClient.Services.MQService));
                 StopService(MqService);
                 if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
                 {

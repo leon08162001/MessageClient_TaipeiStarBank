@@ -236,52 +236,65 @@ namespace MessageClient
             //驗證ID有效性
             else
             {
-                string ID = DBProfile.GetProfile(MainApp.GlobalVariable.DBFile.FullName).ID;
-                long UserType = DBProfile.GetUserType(ID, MainApp.GlobalVariable.DBFile.FullName);
-                //員工身份
-                if (UserType == 1)
-                {
-                    var client = new RestClient(Config.dbWebService);
-                    client.Timeout = Config.webServiceTimeOut * 1000;
-                    var request = new RestRequest("api/MoneySQ/JA_EMPOLYEE/CheckIDValidation", Method.POST);
-                    request.AddParameter("ID", ID, ParameterType.GetOrPost);
-                    request.AddHeader("cache-control", "no-cache");
-                    request.AddHeader("content-type", "application/json");
-                    IRestResponse response = client.Execute(request);
+                //string ID = DBProfile.GetProfile(MainApp.GlobalVariable.DBFile.FullName).ID;
+                //long UserType = DBProfile.GetUserType(ID, MainApp.GlobalVariable.DBFile.FullName);
+                ////員工身份
+                //if (UserType == 1)
+                //{
+                //    var client = new RestClient(Config.dbWebService);
+                //    client.Timeout = Config.webServiceTimeOut * 1000;
+                //    var request = new RestRequest("api/MoneySQ/JA_EMPOLYEE/CheckIDValidation", Method.POST);
+                //    request.AddParameter("ID", ID, ParameterType.GetOrPost);
+                //    request.AddHeader("cache-control", "no-cache");
+                //    request.AddHeader("content-type", "application/json");
+                //    IRestResponse response = client.Execute(request);
 
-                    if (response.ErrorMessage != null && response.ErrorMessage != "")
-                    {
-                        Common.LogHelper.MoneySQLogger.LogInfo<MainActivity>(response.ErrorMessage);
-                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                        alert.SetCancelable(false);
-                        alert.SetTitle("檢查ID有效性錯誤通知");
-                        //alert.SetMessage(response.ErrorMessage);
-                        //alert.SetNegativeButton("確定", ExistSystem);
-                        alert.SetMessage(response.ErrorMessage + "(推播通知服務將無法使用)");
-                        alert.SetNegativeButton("確定", StopPushService);
-                        alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
-                        alert.Show();
-                    }
-                    else
-                    {
-                        if (!Convert.ToBoolean(response.Content))
-                        {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                            alert.SetCancelable(false);
-                            alert.SetTitle("檢查ID有效性結果通知");
-                            //alert.SetMessage("你的ID已失效,App將終止執行");
-                            //alert.SetNegativeButton("確定", ExistSystem);
-                            alert.SetMessage("你的ID已失效,推播通知服務將無法使用");
-                            alert.SetNegativeButton("確定", StopPushService);
-                            alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
-                            alert.Show();
-                        }
-                    }
-                }
-                //客戶身份
-                else if (UserType == 2)
-                {
+                //    if (response.ErrorMessage != null && response.ErrorMessage != "")
+                //    {
+                //        Common.LogHelper.MoneySQLogger.LogInfo<MainActivity>(response.ErrorMessage);
+                //        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                //        alert.SetCancelable(false);
+                //        alert.SetTitle("檢查ID有效性錯誤通知");
+                //        //alert.SetMessage(response.ErrorMessage);
+                //        //alert.SetNegativeButton("確定", ExistSystem);
+                //        alert.SetMessage(response.ErrorMessage + "(推播通知服務將無法使用)");
+                //        //alert.SetNegativeButton("確定", StopPushService);
+                //        alert.SetNegativeButton("確定", (sender, args) => { });
+                //        alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
+                //        alert.Show();
+                //    }
+                //    else
+                //    {
+                //        if (!Convert.ToBoolean(response.Content))
+                //        {
+                //            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                //            alert.SetCancelable(false);
+                //            alert.SetTitle("檢查ID有效性結果通知");
+                //            //alert.SetMessage("您的ID已失效,App將終止執行");
+                //            //alert.SetNegativeButton("確定", ExistSystem);
+                //            alert.SetMessage("您的ID已失效,推播通知服務將無法使用");
+                //            //alert.SetNegativeButton("確定", StopPushService);
+                //            alert.SetNegativeButton("確定", (sender, args) => { });
+                //            alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
+                //            alert.Show();
+                //        }
+                //    }
+                //}
+                ////客戶身份
+                //else if (UserType == 2)
+                //{
 
+                //}
+                if (!LoginService.CheckIDValidation())
+                {
+                    Common.LogHelper.MoneySQLogger.LogInfo<MainActivity>(LoginService.IDValidationError);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                    alert.SetCancelable(false);
+                    alert.SetTitle("檢查ID有效性");
+                    alert.SetMessage(LoginService.IDValidationError);
+                    alert.SetNegativeButton("確定", (sender, args) => { });
+                    alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
+                    alert.Show();
                 }
             }
         }

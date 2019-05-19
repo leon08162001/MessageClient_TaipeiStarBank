@@ -112,14 +112,17 @@ namespace MessageClient
                         bool IsWebServiceAlive = MainApp.CheckServiceAlive(url, int.Parse(port));
                         if (IsWebServiceAlive)
                         {
-                            MqService = new Intent(this, typeof(Services.MQService));
-                            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                            if (LoginService.CheckIDValidation())
                             {
-                                StartForegroundService(MqService);
-                            }
-                            else
-                            {
-                                StartService(MqService);
+                                MqService = new Intent(this, typeof(Services.MQService));
+                                if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                                {
+                                    StartForegroundService(MqService);
+                                }
+                                else
+                                {
+                                    StartService(MqService);
+                                }
                             }
                         }
                     }

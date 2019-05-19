@@ -205,6 +205,11 @@ namespace MessageClient
             StopService(MqService);
             System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
+        private void StopPushService(object sender, EventArgs e)
+        {
+            Intent MqService = new Intent(this, typeof(Services.MQService));
+            StopService(MqService);
+        }
         /// <summary>
         /// 檢查推播所用的身分ID是否已設定
         /// </summary>
@@ -250,8 +255,10 @@ namespace MessageClient
                         AlertDialog.Builder alert = new AlertDialog.Builder(this);
                         alert.SetCancelable(false);
                         alert.SetTitle("檢查ID有效性錯誤通知");
-                        alert.SetMessage(response.ErrorMessage);
-                        alert.SetNegativeButton("確定", ExistSystem);
+                        //alert.SetMessage(response.ErrorMessage);
+                        //alert.SetNegativeButton("確定", ExistSystem);
+                        alert.SetMessage(response.ErrorMessage + "(推播通知服務將無法使用)");
+                        alert.SetNegativeButton("確定", StopPushService);
                         alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
                         alert.Show();
                     }
@@ -262,8 +269,10 @@ namespace MessageClient
                             AlertDialog.Builder alert = new AlertDialog.Builder(this);
                             alert.SetCancelable(false);
                             alert.SetTitle("檢查ID有效性結果通知");
-                            alert.SetMessage("你的ID已失效,App將終止執行");
-                            alert.SetNegativeButton("確定", ExistSystem);
+                            //alert.SetMessage("你的ID已失效,App將終止執行");
+                            //alert.SetNegativeButton("確定", ExistSystem);
+                            alert.SetMessage("你的ID已失效,推播通知服務將無法使用");
+                            alert.SetNegativeButton("確定", StopPushService);
                             alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
                             alert.Show();
                         }

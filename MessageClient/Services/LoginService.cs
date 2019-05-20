@@ -18,6 +18,7 @@ namespace MessageClient.Services
     public static class LoginService
     {
         public static String IDValidationError = String.Empty;
+        public static bool IsIDValidationDone = false;
         /// <summary>
         /// 呼叫WebService驗證ID有效性
         /// </summary>
@@ -53,7 +54,7 @@ namespace MessageClient.Services
                     else
                     {
                         IDValidationResult = true;
-                        IDValidationError = "";
+                        IDValidationError = String.Empty;
                     }
                 }
             }
@@ -62,6 +63,7 @@ namespace MessageClient.Services
             {
 
             }
+            IsIDValidationDone = true;
             return IDValidationResult;
         }
     }

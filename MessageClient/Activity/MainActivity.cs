@@ -285,7 +285,10 @@ namespace MessageClient
                 //{
 
                 //}
-                if (!LoginService.CheckIDValidation())
+                while (!LoginService.IsIDValidationDone)
+                {
+                }
+                if (LoginService.IsIDValidationDone && LoginService.IDValidationError.Length > 0)
                 {
                     Common.LogHelper.MoneySQLogger.LogInfo<MainActivity>(LoginService.IDValidationError);
                     AlertDialog.Builder alert = new AlertDialog.Builder(this);

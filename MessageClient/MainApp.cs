@@ -74,14 +74,15 @@ namespace MessageClient
                 //        WifiManager.SetWifiEnabled(false);
                 //    }
                 //}
-                if (!CheckNetworkConnection())
-                {
-                    string logText = "WIFI or 行動網路尚未開啟連線";
-                    MQService.ErrorInMainApp = logText;
-                    MQService.IsFinishedMqService = true;
-                    Common.LogHelper.MoneySQLogger.LogInfo<MainApp>(logText);
-                    return;
-                }
+
+                //if (!CheckNetworkConnection())
+                //{
+                //    string logText = "WIFI or 行動網路尚未開啟連線";
+                //    MQService.ErrorInMainApp = logText;
+                //    MQService.IsFinishedMqService = true;
+                //    Common.LogHelper.MoneySQLogger.LogInfo<MainApp>(logText);
+                //    return;
+                //}
                 //init db
                 if (!MainApp.GlobalVariable.DBFile.Exists)
                 {

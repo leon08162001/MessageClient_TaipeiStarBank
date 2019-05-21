@@ -50,7 +50,8 @@ namespace MessageClient
                 port = url.IndexOf(":") > -1 ? url.Split(new char[] { ':' })[1] : "443";
                 url = url.IndexOf(":") > -1 ? url.Split(new char[] { ':' })[0] : url;
                 bool IsWebServiceAlive = MainApp.CheckServiceAlive(url, int.Parse(port));
-                if (IsWebServiceAlive)
+                NetworkState NetworkState = MainApp.GetNetworkStatus();
+                if (IsWebServiceAlive && (NetworkState == NetworkState.ConnectedWifi || NetworkState == NetworkState.ConnectedData))
                 {
                     ExecuteProfileSetting();
                 }

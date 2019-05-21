@@ -111,7 +111,8 @@ namespace MessageClient
                         port = url.IndexOf(":") > -1 ? url.Split(new char[] { ':' })[1] : "443";
                         url = url.IndexOf(":") > -1 ? url.Split(new char[] { ':' })[0] : url;
                         bool IsWebServiceAlive = MainApp.CheckServiceAlive(url, int.Parse(port));
-                        if (IsWebServiceAlive)
+                        NetworkState NetworkState = MainApp.GetNetworkStatus();
+                        if (IsWebServiceAlive && (NetworkState == NetworkState.ConnectedWifi || NetworkState == NetworkState.ConnectedData))
                         {
                             if (LoginService.CheckIDValidation())
                             {
@@ -194,5 +195,44 @@ namespace MessageClient
                 return resturnVal;
             }
         }
+        public static NetworkState GetNetworkStatus()
+        {
+            NetworkState _state = NetworkState.Unknown;
+            try
+            {
+                // Retrieve the connectivity manager service
+                var connectivityManager = (ConnectivityManager)
+                    Application.Context.GetSystemService(
+                        Context.ConnectivityService);
+
+                // Check if the network is connected or connecting.
+                // This means that it will be available, 
+                // or become available in a few seconds.
+                var activeNetworkInfo = connectivityManager.ActiveNetworkInfo;
+
+                if (activeNetworkInfo != null && activeNetworkInfo.IsConnectedOrConnecting)
+                {
+                    // Now that we know it's connected, determine if we're on WiFi or something else.
+                    _state = activeNetworkInfo.Type == ConnectivityType.Wifi ?
+                        NetworkState.ConnectedWifi : NetworkState.ConnectedData;
+                }
+                else
+                {
+                    _state = NetworkState.Disconnected;
+                }
+            }
+            catch(Exception ex)
+            {
+            }
+            return _state;
+        }
+    }
+
+    public enum NetworkState
+    {
+        Unknown,
+        ConnectedWifi,
+        ConnectedData,
+        Disconnected
     }
 }

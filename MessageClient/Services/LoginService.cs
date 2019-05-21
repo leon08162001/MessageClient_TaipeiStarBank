@@ -61,7 +61,7 @@ namespace MessageClient.Services
             //客戶身份
             else if (UserType == 2)
             {
-
+                IDValidationError = "您目前為客戶身份,推播通知服務將無法使用";
             }
             IsIDValidationDone = true;
             return IDValidationResult;

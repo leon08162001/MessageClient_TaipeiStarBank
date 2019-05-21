@@ -110,9 +110,8 @@ namespace MessageClient
                         string port = string.Empty;
                         port = url.IndexOf(":") > -1 ? url.Split(new char[] { ':' })[1] : "443";
                         url = url.IndexOf(":") > -1 ? url.Split(new char[] { ':' })[0] : url;
-                        bool IsWebServiceAlive = MainApp.CheckServiceAlive(url, int.Parse(port));
                         NetworkState NetworkState = MainApp.GetNetworkStatus();
-                        if (IsWebServiceAlive && (NetworkState == NetworkState.ConnectedWifi || NetworkState == NetworkState.ConnectedData))
+                        if ((NetworkState == NetworkState.ConnectedWifi || NetworkState == NetworkState.ConnectedData) && MainApp.CheckServiceAlive(url, int.Parse(port)))
                         {
                             if (LoginService.CheckIDValidation())
                             {

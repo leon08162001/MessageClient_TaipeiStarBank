@@ -140,7 +140,7 @@ namespace MessageClient
 
         private void GestureLeft()
         {
-            if (TabHost.CurrentTab == 2)
+            if (TabHost.CurrentTab == 2 || TabHost.CurrentTab == 3)
             {
                 return;
             }
@@ -156,7 +156,7 @@ namespace MessageClient
 
         private void GestureRight()
         {
-            if (TabHost.CurrentTab == 2)
+            if (TabHost.CurrentTab == 2 || TabHost.CurrentTab == 3)
             {
                 return;
             }

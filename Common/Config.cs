@@ -49,6 +49,9 @@ namespace Common
         //MoneySQWebSite
         public static string moneysqWebSite;
 
+        //WebChatUrl
+        public static string WebChatUrl;
+
         public static void ReadParameter()
         {
             if (ConfigStream == null)
@@ -204,6 +207,10 @@ namespace Common
                             //MoneySQWebSite
                             case "MONEYSQWEBSITE":
                                 moneysqWebSite = config_value;
+                                break;
+                            //WebChatUrl
+                            case "WEBCHATURL":
+                                WebChatUrl = config_value;
                                 break;
                         }
                     }

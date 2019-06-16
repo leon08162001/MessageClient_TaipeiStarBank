@@ -1,6 +1,8 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Webkit;
+using Common;
 using System;
 
 namespace MessageClient
@@ -8,9 +10,16 @@ namespace MessageClient
     [Activity(Label = "MoneySQWebViewTabActivity")]
     public class MoneySQWebViewTabActivity : BaseActivity
     {
+        private Action<int, Result, Intent> resultCallbackvalue;
         public static string WebUrl { get; set; }
+
         //[AndroidView]
-        private WebView WebView1;
+        protected WebView WebView1;
+        public void StartActivity(Intent intent, int requestCode, Action<int, Result, Intent> resultCallback)
+        {
+            this.resultCallbackvalue = resultCallback;
+            StartActivityForResult(intent, requestCode);
+        }
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -23,17 +32,25 @@ namespace MessageClient
             //啟用Javascript Enable
             WebView1.Settings.JavaScriptEnabled = true;
             WebView1.Settings.UseWideViewPort = true;
+            WebView1.Settings.AllowFileAccess = true;
             WebView1.Settings.LoadWithOverviewMode = true;
             WebView1.Settings.BuiltInZoomControls = true;
             WebView1.Settings.DisplayZoomControls = true;
-            //載入網址
-            if (string.IsNullOrEmpty(MoneySQWebViewTabActivity.WebUrl))
-            {
-                MoneySQWebViewTabActivity.WebUrl = "https://www.google.com.tw/";
-            }
-            WebView1.LoadUrl(MoneySQWebViewTabActivity.WebUrl);
+            WebView1.Settings.DomStorageEnabled = true;
+            WebView1.SetWebChromeClient(new CustomWebChromeClient(this));
+            WebUrl = Config.moneysqWebSite;
+            WebView1.LoadUrl(WebUrl);
             // 請注意這行，如果不加入巢狀Class 會必成呼叫系統讓系統來裁決開啟http 的方式
             WebView1.SetWebViewClient(new CustWebViewClient());
+        }
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+            if (this.resultCallbackvalue != null)
+            {
+                this.resultCallbackvalue(requestCode, resultCode, data);
+                this.resultCallbackvalue = null;
+            }
         }
         protected override void OnDestroy()
         {
@@ -42,17 +59,55 @@ namespace MessageClient
             GC.Collect(0);
             base.OnDestroy();
         }
-        /// <summary>
-        /// 巢狀Class 繼承WebViewClient
-        /// </summary>
-        private class CustWebViewClient : WebViewClient
+    }
+    /// <summary>
+    /// 巢狀Class 繼承WebViewClient
+    /// </summary>
+    public class CustWebViewClient : WebViewClient
+    {
+        public override bool ShouldOverrideUrlLoading(WebView view, string url)
         {
-            public override bool ShouldOverrideUrlLoading(WebView view, string url)
+            view.LoadUrl(url);
+            return true;
+        }
+        public override void OnReceivedSslError(WebView view, SslErrorHandler handler, Android.Net.Http.SslError error)
+        {
+            handler.Proceed();
+        }
+    }
+    public class CustomWebChromeClient : WebChromeClient
+    {
+        private static int filechooser = 2;
+        private IValueCallback message;
+        private MoneySQWebViewTabActivity activity = null;
+        public CustomWebChromeClient(MoneySQWebViewTabActivity context)
+        {
+            this.activity = context;
+        }
+        public override bool OnShowFileChooser(WebView webView, IValueCallback filePathCallback, FileChooserParams fileChooserParams)
+        {
+            this.message = filePathCallback;
+            Intent chooserIntent = fileChooserParams.CreateIntent();
+            chooserIntent.AddCategory(Intent.CategoryOpenable);
+            this.activity.StartActivity(Intent.CreateChooser(chooserIntent, "File Chooser"), filechooser, this.OnActivityResult);
+            return true;
+        }
+        private void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            if (data != null)
             {
-                view.LoadUrl(url);
-                return true;
-            }
+                if (requestCode == filechooser)
+                {
+                    if (null == this.message)
+                    {
+                        //enter code here
+                        return;
+                    }
 
+                    this.message.OnReceiveValue(WebChromeClient.FileChooserParams.ParseResult((int)resultCode, data));
+                    this.message = null;
+                }
+            }
         }
     }
 }

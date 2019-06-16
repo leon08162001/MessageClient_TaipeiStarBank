@@ -118,6 +118,7 @@
     <Compile Include="Activity\MainActivity.cs" />
     <Compile Include="Activity\MessageTabActivity.cs" />
     <Compile Include="Activity\MoneySQWebViewTabActivity.cs" />
+    <Compile Include="Activity\WebChatTabActivity.cs" />
     <Compile Include="Adapter\MessageAdapter.cs" />
     <Compile Include="Ciphers\EncryptionKeyHelper.cs" />
     <Compile Include="Ciphers\RSAKeyPairGenerator.cs" />

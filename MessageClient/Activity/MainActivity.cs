@@ -27,7 +27,8 @@ using Android.Content.PM;
 namespace MessageClient
 {
     //[Activity( MainLauncher = true, Icon = "@drawable/moneysq")]
-    [Activity(MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
+    //[Activity(MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(MainLauncher = true)]
     public class MainActivity : TabActivity
     {
         private GestureDetector _gestureDetector;
@@ -90,7 +91,11 @@ namespace MessageClient
                 tab = this.TabHost.NewTabSpec("MoneySQ Site");
                 tab.SetIndicator("MoneySQ Site");
                 tab.SetContent(new Intent(this, typeof(MoneySQWebViewTabActivity)));
-                MoneySQWebViewTabActivity.WebUrl = Config.moneysqWebSite;
+                this.TabHost.AddTab(tab);
+
+                tab = this.TabHost.NewTabSpec("會話傳檔");
+                tab.SetIndicator("會話傳檔");
+                tab.SetContent(new Intent(this, typeof(WebChatTabActivity)));
                 this.TabHost.AddTab(tab);
 
                 //手勢程式碼

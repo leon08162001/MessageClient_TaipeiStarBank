@@ -27,8 +27,7 @@ using Android.Content.PM;
 namespace MessageClient
 {
     //[Activity( MainLauncher = true, Icon = "@drawable/moneysq")]
-    //[Activity(MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
-    [Activity(MainLauncher = true)]
+    [Activity(MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : TabActivity
     {
         private GestureDetector _gestureDetector;
@@ -88,8 +87,8 @@ namespace MessageClient
                 this.TabHost.AddTab(tab);
 
                 //加入WebView瀏覽網頁頁簽
-                tab = this.TabHost.NewTabSpec("MoneySQ Site");
-                tab.SetIndicator("MoneySQ Site");
+                tab = this.TabHost.NewTabSpec("公司網站");
+                tab.SetIndicator("公司網站");
                 tab.SetContent(new Intent(this, typeof(MoneySQWebViewTabActivity)));
                 this.TabHost.AddTab(tab);
 
@@ -98,8 +97,16 @@ namespace MessageClient
                 tab.SetContent(new Intent(this, typeof(WebChatTabActivity)));
                 this.TabHost.AddTab(tab);
 
-                //手勢程式碼
-                _gestureListener = new GestureListener();
+                TabWidget TabWidget = TabHost.TabWidget;
+                for (int i = 0; i < TabWidget.ChildCount; i++)
+                {
+                    object android = null;
+                    TextView tv = (TextView)TabWidget.GetChildAt(i).FindViewById(Android.Resource.Id.Title);
+                    tv.SetTextSize(Android.Util.ComplexUnitType.Dip, 14);
+                }
+
+                    //手勢程式碼
+                    _gestureListener = new GestureListener();
                 _gestureListener.LeftEvent += GestureLeft;
                 _gestureListener.RightEvent += GestureRight;
                 _gestureDetector = new GestureDetector(this, _gestureListener);

@@ -8,11 +8,14 @@ namespace MessageClient
     [Activity(Label = "WebChatTabActivity")]
     public class WebChatTabActivity : MoneySQWebViewTabActivity
     {
+        public WebChatTabActivity()
+        {
+            WebUrl = Config.WebChatUrl;
+        }
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            WebUrl = Config.WebChatUrl;
-            WebView1.LoadUrl(WebUrl);
+            //WebView1.LoadUrl(WebUrl);
         }
     }
 }

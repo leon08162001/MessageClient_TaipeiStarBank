@@ -15,6 +15,10 @@ namespace MessageClient
 
         //[AndroidView]
         protected WebView WebView1;
+        public MoneySQWebViewTabActivity()
+        {
+            WebUrl = Config.moneysqWebSite;
+        }
         public void StartActivity(Intent intent, int requestCode, Action<int, Result, Intent> resultCallback)
         {
             this.resultCallbackvalue = resultCallback;
@@ -37,8 +41,9 @@ namespace MessageClient
             WebView1.Settings.BuiltInZoomControls = true;
             WebView1.Settings.DisplayZoomControls = true;
             WebView1.Settings.DomStorageEnabled = true;
+            WebView1.Settings.CacheMode = CacheModes.CacheElseNetwork;
+            WebView1.Settings.SetAppCacheEnabled(true);
             WebView1.SetWebChromeClient(new CustomWebChromeClient(this));
-            WebUrl = Config.moneysqWebSite;
             WebView1.LoadUrl(WebUrl);
             // 請注意這行，如果不加入巢狀Class 會必成呼叫系統讓系統來裁決開啟http 的方式
             WebView1.SetWebViewClient(new CustWebViewClient());

@@ -45,7 +45,7 @@ namespace MessageClient.Services
 
             MQJefferiesExcuReport = TopicMQFactory.GetMQAdapterInstance(MQAdapterType.BatchMQAdapter);
             MQJefferiesExcuReport.Uri = Config.MQ_network + ":" + Config.MQ_service;
-            MQJefferiesExcuReport.DestinationFeature = DestinationFeature.VirtualTopic;
+            MQJefferiesExcuReport.DestinationFeature = DestinationFeature.Queue;
             //MQJefferiesExcuReport.DestinationFeature = DestinationFeature.Queue;
             MQJefferiesExcuReport.MessageTimeOut = ((double)1 / 24) * ((double)1 / 60);
             MQJefferiesExcuReport.SendName = "";

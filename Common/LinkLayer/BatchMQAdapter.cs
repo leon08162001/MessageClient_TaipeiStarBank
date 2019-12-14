@@ -280,6 +280,10 @@ namespace Common.LinkLayer
                     }
                     _DicTagType = Util.ConvertTagClassConstants(_DataType);
                     //2.驗證MQ傳過來的TagData的tag正確性(與指定的TagType)
+                    if (MQMessageDictionary.ContainsKey("__AMQ_CID"))
+                    {
+                        MQMessageDictionary.Remove("__AMQ_CID");
+                    }
                     foreach (string key in MQMessageDictionary.Keys)
                     {
                         if (!_DicTagType.ContainsKey(key))

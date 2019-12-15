@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="internalOnly" package="com.moneysq.messageclient" android:versionCode="1" android:versionName="1.0.0">
-	<uses-sdk android:minSdkVersion="16" />
+	<uses-sdk android:minSdkVersion="17" />
 	<application android:name=".MainApp" android:label="MessageClient">
 		<service android:name=".Services.MQService" />
 		<service android:name=".Services.EMSService" />
@@ -22,4 +22,5 @@
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 	<uses-permission android:name="android.permission.VIBRATE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 </manifest>

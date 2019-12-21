@@ -8,9 +8,10 @@ using Common.Ciphers;
 using Common.LinkLayer;
 using DBLogic;
 using DBModels;
-using MessageClinet.Ciphers;
-using MessageClinet.Services;
-using MessageClinet.ViewHolder;
+using MessageClient.Ciphers;
+using MessageClient.Services;
+using MessageClient.Utils;
+using MessageClient.ViewHolder;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -18,11 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using Utility;
-using MessageClient.Utils;
 using System.Threading.Tasks;
+using Utility;
 
-namespace MessageClinet
+namespace MessageClient
 {
     //[Activity( MainLauncher = true, Icon = "@drawable/moneysq")]
     [Activity(MainLauncher = true)]
@@ -180,7 +180,7 @@ namespace MessageClinet
                     RunOnUiThread(
                         () =>
                         {
-                            Intent EmsService = new Intent(this, typeof(Services.EMSService));
+                            Intent EmsService = new Intent(this, typeof(MessageClient.Services.EMSService));
                             StopService(EmsService);
                             AlertDialog.Builder alert = new AlertDialog.Builder(this);
                             alert.SetCancelable(false);
@@ -339,7 +339,7 @@ namespace MessageClinet
                                 request.AddHeader("content-type", "application/json");
                                 response = client.Execute(request);
                                 builder.Dismiss();
-                                Intent EmsService = new Intent(this, typeof(Services.EMSService));
+                                Intent EmsService = new Intent(this, typeof(MessageClient.Services.EMSService));
                                 StopService(EmsService);
                                 if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
                                 {
@@ -395,7 +395,7 @@ namespace MessageClinet
                     Profile.ID = LoginView.txtID.Text.Trim();
                     DBProfile.InsertProfile(Profile, MainApp.GlobalVariable.DBFile.FullName);
                     builder.Dismiss();
-                    Intent EmsService = new Intent(this, typeof(Services.EMSService));
+                    Intent EmsService = new Intent(this, typeof(MessageClient.Services.EMSService));
                     StopService(EmsService);
                     if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
                     {
@@ -506,7 +506,7 @@ namespace MessageClinet
                 String priKeyxml = CipherHelper.RSAPrivateKeyJava2DotNet(KPG.GetPrivateKeyString());
 
                 //設定明文資料
-                Messager.loanApplication_customer cust = new Messager.loanApplication_customer();
+                MessageClient.Messager.loanApplication_customer cust = new MessageClient.Messager.loanApplication_customer();
                 cust.pk = 20;
                 cust.order_nbr = "00000016";
                 cust.country = "TWN";
@@ -522,7 +522,7 @@ namespace MessageClinet
                 cust.add_1 = "新北市土城區金城路三段12號14樓";
                 cust.add_2 = "新北市土城區金城路三段12號14樓";
 
-                Messager.loanApplication_customer cust1 = new Messager.loanApplication_customer();
+                MessageClient.Messager.loanApplication_customer cust1 = new MessageClient.Messager.loanApplication_customer();
                 cust1.pk = 16;
                 cust1.order_nbr = "00000152";
                 cust1.country = "TWN";
@@ -538,7 +538,7 @@ namespace MessageClinet
                 cust1.add_1 = "台北市中山區長安東路1段16號7樓之1";
                 cust1.add_2 = "台北市中山區長安東路1段16號7樓之1";
 
-                List<Messager.loanApplication_customer> lstCust = new List<Messager.loanApplication_customer>();
+                List<MessageClient.Messager.loanApplication_customer> lstCust = new List<MessageClient.Messager.loanApplication_customer>();
                 lstCust.Add(cust);
                 lstCust.Add(cust1);
                 string plaintxt = JsonConvert.SerializeObject(lstCust);
@@ -554,7 +554,7 @@ namespace MessageClinet
                 //string plaintxt1 = CipherHelper.RSADecrypt(priKeyxml, ciphertxt);
 
                 //Use MQ傳送明文,簽章,公鑰給server begin
-                Messager.SignMessage sm = new Messager.SignMessage();
+                MessageClient.Messager.SignMessage sm = new MessageClient.Messager.SignMessage();
                 sm.plainText = plaintxt;
                 sm.cipherText = ciphertxt;
                 sm.sign = sign;
@@ -655,7 +655,7 @@ namespace MessageClinet
                 String priKeyxml = CipherHelper.RSAPrivateKeyJava2DotNet(KPG.GetPrivateKeyString());
 
                 //設定明文資料
-                Messager.loanApplication_customer cust = new Messager.loanApplication_customer();
+                MessageClient.Messager.loanApplication_customer cust = new MessageClient.Messager.loanApplication_customer();
                 cust.pk = 20;
                 cust.order_nbr = "00000016";
                 cust.country = "TWN";
@@ -663,7 +663,7 @@ namespace MessageClinet
                 cust.customer_type = "第三人(擔保人)";
                 cust.nickname = "王勝達";
 
-                Messager.loanApplication_customer cust1 = new Messager.loanApplication_customer();
+                MessageClient.Messager.loanApplication_customer cust1 = new MessageClient.Messager.loanApplication_customer();
                 cust1.pk = 16;
                 cust1.order_nbr = "00000152";
                 cust1.country = "TWN";
@@ -671,7 +671,7 @@ namespace MessageClinet
                 cust1.customer_type = "第三人(擔保人)";
                 cust1.nickname = "廖一民";
 
-                List<Messager.loanApplication_customer> lstCust = new List<Messager.loanApplication_customer>();
+                List<MessageClient.Messager.loanApplication_customer> lstCust = new List<MessageClient.Messager.loanApplication_customer>();
                 lstCust.Add(cust);
                 lstCust.Add(cust1);
                 string plaintxt = JsonConvert.SerializeObject(lstCust);
@@ -687,7 +687,7 @@ namespace MessageClinet
                 //string plaintxt1 = CipherHelper.RSADecrypt(priKeyxml, ciphertxt);
 
                 //Use MQ傳送明文,簽章,公鑰給server begin
-                Messager.SignMessage sm = new Messager.SignMessage();
+                MessageClient.Messager.SignMessage sm = new MessageClient.Messager.SignMessage();
                 sm.plainText = plaintxt;
                 sm.cipherText = ciphertxt;
                 sm.sign = sign;

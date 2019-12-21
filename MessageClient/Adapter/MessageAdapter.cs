@@ -3,7 +3,6 @@ using Android.Views;
 using Android.Widget;
 using DBModels;
 using MessageClient.ViewHolder;
-using MessageClinet;
 using System;
 using System.Collections.Generic;
 using System.Reflection;

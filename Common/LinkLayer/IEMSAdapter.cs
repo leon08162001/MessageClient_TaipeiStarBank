@@ -1,4 +1,5 @@
 ﻿using Common.HandlerLayer;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace Common.LinkLayer
@@ -28,6 +29,10 @@ namespace Common.LinkLayer
         /// 是否使用ssl
         /// </summary>
         bool UseSSL { get; set; }
+        /// <summary>
+        /// 憑證檔位置
+        /// </summary>
+        List<string> CertsPath { get; set; }
         /// <summary>
         /// 監聽的主題
         /// </summary>

@@ -4,14 +4,14 @@ using Android.Net;
 using Android.Runtime;
 using Common;
 using DBLogic;
-using MessageClinet.Services;
 using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 
-namespace MessageClinet
+namespace MessageClient
 {
     [Application(Icon = "@drawable/moneysq")]
     public class MainApp : Android.App.Application
@@ -28,105 +28,107 @@ namespace MessageClinet
             base.OnCreate();
             TimerCallback timerDelegate = new TimerCallback(RestartApp);
             Timer RestartAppTimer = new Timer(timerDelegate, null, 1000, 1000);
-
             //config init ...
-            FileInfo IniFile = new FileInfo(Path.Combine(Context.GetExternalFilesDir("").AbsolutePath, ".common.ini"));
-            if (!IniFile.Exists)
+            Task.Run(() =>
             {
-                var type = this.GetType();
-                var resource = type.Namespace + ".Resources.common.ini";
-                using (var stream = type.Assembly.GetManifestResourceStream(resource))
+                FileInfo IniFile = new FileInfo(Path.Combine(Context.GetExternalFilesDir("").AbsolutePath, ".common.ini"));
+                if (!IniFile.Exists)
                 {
-                    if (stream != null)
+                    var type = this.GetType();
+                    var resource = type.Namespace + ".Resources.common.ini";
+                    using (var stream = type.Assembly.GetManifestResourceStream(resource))
                     {
-                        using (Stream file = File.Create(Path.Combine(Context.GetExternalFilesDir("").AbsolutePath, ".common.ini")))
+                        if (stream != null)
                         {
-                            stream.CopyTo(file);
+                            using (Stream file = File.Create(Path.Combine(Context.GetExternalFilesDir("").AbsolutePath, ".common.ini")))
+                            {
+                                stream.CopyTo(file);
+                            }
                         }
                     }
                 }
-            }
-            using (FileStream FS = IniFile.OpenRead())
-            {
+                using (FileStream FS = IniFile.OpenRead())
+                {
+                    try
+                    {
+                        //Config.Context = this;
+                        Config.ConfigStream = FS;
+                        Config.ReadParameter();
+                        Common.LogHelper.MoneySQLogger.logPath = Path.Combine(Context.GetExternalFilesDir("").AbsolutePath, Config.logDir);
+                    }
+                    catch (Exception ex)
+                    {
+                        Android.Util.Log.Error(MethodBase.GetCurrentMethod().DeclaringType.ToString(), "MainApp OnCreate() Error({0})", ex.Message);
+                        Common.LogHelper.MoneySQLogger.LogError<MainApp>(ex);
+                    }
+                    //develop stage temporarily reserved,product stage must delele for user can not change ini file
+                    //IniFile.Delete();
+                }
+
+                //WifiManager WifiManager = (WifiManager)GetSystemService(WifiService);
+                //if (!WifiManager.IsWifiEnabled)
+                //{
+                //    if (WifiManager.SetWifiEnabled(true))
+                //    {
+                //        WifiManager.SetWifiEnabled(false);
+                //    }
+                //}
+                //if (!CheckNetworkConnection())
+                //{
+                //    string logText = "WIFI or 行動網路尚未開啟連線";
+                //    EMSService.ErrorInMainApp = logText;
+                //    EMSService.IsFinishedEmsService = true;
+                //    Common.LogHelper.MoneySQLogger.LogInfo<MainApp>(logText);
+                //    return;
+                //}
+                //init db
+                if (!MainApp.GlobalVariable.DBFile.Exists)
+                {
+                    var type = this.GetType();
+                    var resource = type.Namespace + ".Resources.db.MoneySQ.db";
+                    using (var stream = type.Assembly.GetManifestResourceStream(resource))
+                    {
+                        if (stream != null)
+                        {
+                            using (Stream file = File.Create(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "MoneySQ.db")))
+                            {
+                                stream.CopyTo(file);
+                            }
+                        }
+                    }
+                }
                 try
                 {
-                    //Config.Context = this;
-                    Config.ConfigStream = FS;
-                    Config.ReadParameter();
-                    Common.LogHelper.MoneySQLogger.logPath = Path.Combine(Context.GetExternalFilesDir("").AbsolutePath, Config.logDir);
+                    if (DBProfile.CheckProfileExist(MainApp.GlobalVariable.DBFile.FullName))
+                    {
+                        Common.LogHelper.MoneySQLogger.DeleteLogFile(Config.preservedDaysForLog, Common.LogHelper.MoneySQLogger.logPath);
+                        int fstIdx = Config.dbWebService.IndexOf("/");
+                        int lstIdx = Config.dbWebService.LastIndexOf("/");
+                        string url = Config.dbWebService.Substring(fstIdx, lstIdx - fstIdx).Replace("/", "");
+                        string port = string.Empty;
+                        port = url.IndexOf(":") > -1 ? url.Split(new char[] { ':' })[1] : "443";
+                        url = url.IndexOf(":") > -1 ? url.Split(new char[] { ':' })[0] : url;
+                        bool IsWebServiceAlive = MainApp.CheckServiceAlive(url, int.Parse(port));
+                        if (IsWebServiceAlive)
+                        {
+                            EmsService = new Intent(this, typeof(MessageClient.Services.EMSService));
+                            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                            {
+                                StartForegroundService(EmsService);
+                            }
+                            else
+                            {
+                                StartService(EmsService);
+                            }
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
                     Android.Util.Log.Error(MethodBase.GetCurrentMethod().DeclaringType.ToString(), "MainApp OnCreate() Error({0})", ex.Message);
                     Common.LogHelper.MoneySQLogger.LogError<MainApp>(ex);
                 }
-                //develop stage temporarily reserved,product stage must delele for user can not change ini file
-                //IniFile.Delete();
-            }
-
-            //WifiManager WifiManager = (WifiManager)GetSystemService(WifiService);
-            //if (!WifiManager.IsWifiEnabled)
-            //{
-            //    if (WifiManager.SetWifiEnabled(true))
-            //    {
-            //        WifiManager.SetWifiEnabled(false);
-            //    }
-            //}
-            if (!CheckNetworkConnection())
-            {
-                string logText = "WIFI or 行動網路尚未開啟連線";
-                EMSService.ErrorInMainApp = logText;
-                EMSService.IsFinishedEmsService = true;
-                Common.LogHelper.MoneySQLogger.LogInfo<MainApp>(logText);
-                return;
-            }
-            //init db
-            if (!MainApp.GlobalVariable.DBFile.Exists)
-            {
-                var type = this.GetType();
-                var resource = type.Namespace + ".Resources.db.MoneySQ.db";
-                using (var stream = type.Assembly.GetManifestResourceStream(resource))
-                {
-                    if (stream != null)
-                    {
-                        using (Stream file = File.Create(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "MoneySQ.db")))
-                        {
-                            stream.CopyTo(file);
-                        }
-                    }
-                }
-            }
-            try
-            {
-                if (DBProfile.CheckProfileExist(MainApp.GlobalVariable.DBFile.FullName))
-                {
-                    Common.LogHelper.MoneySQLogger.DeleteLogFile(Config.preservedDaysForLog, Common.LogHelper.MoneySQLogger.logPath);
-                    int fstIdx = Config.dbWebService.IndexOf("/");
-                    int lstIdx = Config.dbWebService.LastIndexOf("/");
-                    string url = Config.dbWebService.Substring(fstIdx, lstIdx - fstIdx).Replace("/", "");
-                    string port = string.Empty;
-                    port = url.IndexOf(":") > -1 ? url.Split(new char[] { ':' })[1] : "443";
-                    url = url.IndexOf(":") > -1 ? url.Split(new char[] { ':' })[0] : url;
-                    bool IsWebServiceAlive = MainApp.CheckServiceAlive(url, int.Parse(port));
-                    if (IsWebServiceAlive)
-                    {
-                        EmsService = new Intent(this, typeof(Services.EMSService));
-                        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
-                        {
-                            StartForegroundService(EmsService);
-                        }
-                        else
-                        {
-                            StartService(EmsService);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Android.Util.Log.Error(MethodBase.GetCurrentMethod().DeclaringType.ToString(), "MainApp OnCreate() Error({0})", ex.Message);
-                Common.LogHelper.MoneySQLogger.LogError<MainApp>(ex);
-            }
+            });
         }
 
         public override void OnTerminate()

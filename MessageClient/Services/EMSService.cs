@@ -7,12 +7,12 @@ using Common;
 using Common.LinkLayer;
 using DBLogic;
 using DBModels;
+using MessageClient.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using Utility;
-using MessageClient.Utils;
 
 namespace MessageClient.Services
 {

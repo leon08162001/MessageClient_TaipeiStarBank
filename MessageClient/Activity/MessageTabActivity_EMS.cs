@@ -12,13 +12,13 @@ using DBLogic;
 using DBModels;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using MessageClinet.ViewHolder;
+using MessageClient.ViewHolder;
 using System;
 using System.IO;
 using System.Reflection;
 using Color = Android.Graphics.Color;
 
-namespace MessageClinet
+namespace MessageClient
 {
     [Activity(Label = "My Activity")]
     public class MessageTabActivity : BaseActivity
@@ -185,7 +185,7 @@ namespace MessageClinet
                 DBProfile.ClearProfile(MainApp.GlobalVariable.DBFile.FullName);
                 DBProfile.InsertProfile(Profile, MainApp.GlobalVariable.DBFile.FullName);
                 builder.Dismiss();
-                Intent EmsService = new Intent(this, typeof(Services.EMSService));
+                Intent EmsService = new Intent(this, typeof(MessageClient.Services.EMSService));
                 StopService(EmsService);
                 if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
                 {

@@ -1,6 +1,8 @@
 ﻿//using Android.Content;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Common
 {
@@ -23,6 +25,7 @@ namespace Common
         public static string EMS_service;
         public static string EMS_network;
         public static bool EMS_useSSL = false;
+        public static List<string> EMS_CertsPath = new List<string>();
         public static string EMSReceivedMessageReservedSeconds = "30";
 
         //DBWebService
@@ -128,6 +131,16 @@ namespace Common
                                 break;
                             case "EMS_USESSL":
                                 EMS_useSSL = Convert.ToBoolean(config_value);
+                                break;
+                            case "EMS_CERTSPATH":
+                                if (config_value.IndexOf(",") == -1)
+                                {
+                                    EMS_CertsPath.Add(config_value);
+                                }
+                                else
+                                {
+                                    EMS_CertsPath = config_value.Split(new char[] { ',' }).ToList<string>();
+                                }
                                 break;
                             case "EMSRECEIVEDMESSAGERESERVEDSECONDS":
                                 {

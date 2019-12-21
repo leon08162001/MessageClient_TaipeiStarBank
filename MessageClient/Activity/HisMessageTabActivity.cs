@@ -4,7 +4,6 @@ using Android.Views;
 using Android.Widget;
 using DBLogic;
 using DBModels;
-using MessageClient.Services;
 using System;
 using System.Collections.Generic;
 using System.Reflection;

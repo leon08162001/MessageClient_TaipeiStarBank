@@ -4,6 +4,7 @@ using Android.Net;
 using Android.Runtime;
 using Common;
 using DBLogic;
+using MessageClient.Services;
 using System;
 using System.IO;
 using System.Net.Sockets;
@@ -73,6 +74,7 @@ namespace MessageClient
                 //        WifiManager.SetWifiEnabled(false);
                 //    }
                 //}
+
                 //if (!CheckNetworkConnection())
                 //{
                 //    string logText = "WIFI or 行動網路尚未開啟連線";
@@ -111,14 +113,17 @@ namespace MessageClient
                         bool IsWebServiceAlive = MainApp.CheckServiceAlive(url, int.Parse(port));
                         if (IsWebServiceAlive)
                         {
-                            EmsService = new Intent(this, typeof(MessageClient.Services.EMSService));
-                            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                            if (LoginService.CheckIDValidation())
                             {
-                                StartForegroundService(EmsService);
-                            }
-                            else
-                            {
-                                StartService(EmsService);
+                                EmsService = new Intent(this, typeof(Services.EMSService));
+                                if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                                {
+                                    StartForegroundService(EmsService);
+                                }
+                                else
+                                {
+                                    StartService(EmsService);
+                                }
                             }
                         }
                     }
@@ -189,5 +194,44 @@ namespace MessageClient
                 return resturnVal;
             }
         }
+        public static NetworkState GetNetworkStatus()
+        {
+            NetworkState _state = NetworkState.Unknown;
+            try
+            {
+                // Retrieve the connectivity manager service
+                var connectivityManager = (ConnectivityManager)
+                    Application.Context.GetSystemService(
+                        Context.ConnectivityService);
+
+                // Check if the network is connected or connecting.
+                // This means that it will be available, 
+                // or become available in a few seconds.
+                var activeNetworkInfo = connectivityManager.ActiveNetworkInfo;
+
+                if (activeNetworkInfo != null && activeNetworkInfo.IsConnectedOrConnecting)
+                {
+                    // Now that we know it's connected, determine if we're on WiFi or something else.
+                    _state = activeNetworkInfo.Type == ConnectivityType.Wifi ?
+                        NetworkState.ConnectedWifi : NetworkState.ConnectedData;
+                }
+                else
+                {
+                    _state = NetworkState.Disconnected;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return _state;
+        }
+    }
+
+    public enum NetworkState
+    {
+        Unknown,
+        ConnectedWifi,
+        ConnectedData,
+        Disconnected
     }
 }

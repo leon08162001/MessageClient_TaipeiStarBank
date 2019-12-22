@@ -19,7 +19,7 @@ using System.IO;
 using System.Reflection;
 using Color = Android.Graphics.Color;
 
-namespace MessageClinet
+namespace MessageClient
 {
     [Activity(Label = "My Activity")]
     public class MessageTabActivity : BaseActivity
@@ -260,7 +260,7 @@ namespace MessageClinet
             {
                 intent = PackageManager.GetLaunchIntentForPackage(Config.folderApp1);
             }
-            else if(PackageManager.GetLaunchIntentForPackage(Config.folderApp2) != null)
+            else if (PackageManager.GetLaunchIntentForPackage(Config.folderApp2) != null)
             {
                 intent = PackageManager.GetLaunchIntentForPackage(Config.folderApp2);
             }

@@ -4,6 +4,7 @@ using Android.Views;
 using Android.Widget;
 using DBLogic;
 using DBModels;
+using MessageClient.Services;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -111,9 +112,9 @@ namespace MessageClient
             {
                 MQService.IsNewMessageData = false;
                 RunOnUiThread(() =>
-            {
-                BindHistoryMessage();
-            });
+                {
+                    BindHistoryMessage();
+                });
             }
         }
         private void BindHistoryMessage()

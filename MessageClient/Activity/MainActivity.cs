@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -8,10 +9,11 @@ using Common.Ciphers;
 using Common.LinkLayer;
 using DBLogic;
 using DBModels;
-using MessageClient.Utils;
 using MessageClient.Ciphers;
 using MessageClient.Services;
+using MessageClient.Utils;
 using MessageClient.ViewHolder;
+using MessageClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -21,8 +23,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Utility;
-using MessageClinet;
-using Android.Content.PM;
 
 namespace MessageClient
 {
@@ -105,8 +105,8 @@ namespace MessageClient
                     tv.SetTextSize(Android.Util.ComplexUnitType.Dip, 14);
                 }
 
-                    //手勢程式碼
-                    _gestureListener = new GestureListener();
+                //手勢程式碼
+                _gestureListener = new GestureListener();
                 _gestureListener.LeftEvent += GestureLeft;
                 _gestureListener.RightEvent += GestureRight;
                 _gestureDetector = new GestureDetector(this, _gestureListener);
@@ -182,7 +182,6 @@ namespace MessageClient
             base.OnAttachedToWindow();
             this.Window.SetTitle(this.Resources.GetString(Resource.String.ApplicationName) + "-" + Application.Context.ApplicationContext.PackageManager.GetPackageInfo(Application.Context.ApplicationContext.PackageName, 0).VersionName);
         }
-
         void ChkIsFinishedMqServiceTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             if(MQService.IsFinishedMqService)

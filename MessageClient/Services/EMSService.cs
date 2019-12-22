@@ -221,6 +221,7 @@ namespace MessageClient.Services
 
                 //Toast.MakeText(this, "EMSJefferiesExcuReport Server 處理完成", ToastLength.Long).Show();
                 Toast.MakeText(this, "親愛的客戶，您好!目前系統收到一筆來自MoneySQ的推播通知，詳細訊息請瀏覽訊息公告", ToastLength.Long).Show();
+                //SnackbarWrapper.make(Android.App.Application.Context, "親愛的客戶，您好!目前系統收到一筆來自MoneySQ的推播通知，詳細訊息請瀏覽訊息公告", 3000).Show();
                 //var v = (Vibrator)Android.App.Application.Context.GetSystemService(Android.App.Application.VibratorService);
                 //v.Vibrate(250);
                 wakeLock.Release();

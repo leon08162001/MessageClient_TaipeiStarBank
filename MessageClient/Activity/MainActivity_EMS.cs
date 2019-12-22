@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -25,12 +26,11 @@ using Utility;
 namespace MessageClient
 {
     //[Activity( MainLauncher = true, Icon = "@drawable/moneysq")]
-    [Activity(MainLauncher = true)]
+    [Activity(MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : TabActivity
     {
         private GestureDetector _gestureDetector;
         private GestureListener _gestureListener;
-        private System.Timers.Timer ChkIsFinishedMqServiceTimer;
         private System.Timers.Timer ChkIsFinishedEmsServiceTimer;
         AlertDialog builder = null;
         LoginView LoginView = null;
@@ -63,7 +63,6 @@ namespace MessageClient
                 ChkIsFinishedEmsServiceTimer.Elapsed += ChkIsFinishedEmsServiceTimer_Elapsed;
                 ChkIsFinishedEmsServiceTimer.Start();
 
-
                 var tab = this.TabHost.NewTabSpec("訊息公告");
                 tab.SetIndicator("訊息公告");
                 if ((EMSService.EMSJefferiesExcuReportPendingIntent != null && this.Intent.HasExtra("EMSJefferiesExcuReportMessage")))
@@ -87,11 +86,24 @@ namespace MessageClient
                 this.TabHost.AddTab(tab);
 
                 //加入WebView瀏覽網頁頁簽
-                tab = this.TabHost.NewTabSpec("MoneySQ Site");
-                tab.SetIndicator("MoneySQ Site");
+                tab = this.TabHost.NewTabSpec("公司網站");
+                tab.SetIndicator("公司網站");
                 tab.SetContent(new Intent(this, typeof(MoneySQWebViewTabActivity)));
-                MoneySQWebViewTabActivity.WebUrl = Config.moneysqWebSite;
+                //MoneySQWebViewTabActivity.WebUrl = Config.moneysqWebSite;
                 this.TabHost.AddTab(tab);
+
+                tab = this.TabHost.NewTabSpec("會話傳檔");
+                tab.SetIndicator("會話傳檔");
+                tab.SetContent(new Intent(this, typeof(WebChatTabActivity)));
+                this.TabHost.AddTab(tab);
+
+                TabWidget TabWidget = TabHost.TabWidget;
+                for (int i = 0; i < TabWidget.ChildCount; i++)
+                {
+                    object android = null;
+                    TextView tv = (TextView)TabWidget.GetChildAt(i).FindViewById(Android.Resource.Id.Title);
+                    tv.SetTextSize(Android.Util.ComplexUnitType.Dip, 14);
+                }
 
                 //手勢程式碼
                 _gestureListener = new GestureListener();
@@ -128,7 +140,7 @@ namespace MessageClient
 
         private void GestureLeft()
         {
-            if (TabHost.CurrentTab == 2)
+            if (TabHost.CurrentTab == 2 || TabHost.CurrentTab == 3)
             {
                 return;
             }
@@ -144,7 +156,7 @@ namespace MessageClient
 
         private void GestureRight()
         {
-            if (TabHost.CurrentTab == 2)
+            if (TabHost.CurrentTab == 2 || TabHost.CurrentTab == 3)
             {
                 return;
             }
@@ -180,8 +192,8 @@ namespace MessageClient
                     RunOnUiThread(
                         () =>
                         {
-                            Intent EmsService = new Intent(this, typeof(MessageClient.Services.EMSService));
-                            StopService(EmsService);
+                            //Intent EmsService = new Intent(this, typeof(Services.EMSService));
+                            //StopService(EmsService);
                             AlertDialog.Builder alert = new AlertDialog.Builder(this);
                             alert.SetCancelable(false);
                             alert.SetTitle("EMSService初始化錯誤通知");
@@ -196,11 +208,18 @@ namespace MessageClient
         }
         private void ExistSystem(object sender,EventArgs e)
         {
-             if (Build.VERSION.SdkInt == BuildVersionCodes.Lollipop)
-             {
-                 this.FinishAndRemoveTask();
-             }
-             Java.Lang.JavaSystem.Exit(1);
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+                this.FinishAndRemoveTask();
+            else
+                Finish();
+            Intent EmsService = new Intent(this, typeof(Services.EMSService));
+            StopService(EmsService);
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+        }
+        private void StopPushService(object sender, EventArgs e)
+        {
+            Intent EmsService = new Intent(this, typeof(Services.EMSService));
+            StopService(EmsService);
         }
         /// <summary>
         /// 檢查推播所用的身分ID是否已設定
@@ -228,48 +247,62 @@ namespace MessageClient
             //驗證ID有效性
             else
             {
-                string ID = DBProfile.GetProfile(MainApp.GlobalVariable.DBFile.FullName).ID;
-                long UserType = DBProfile.GetUserType(ID, MainApp.GlobalVariable.DBFile.FullName);
-                //員工身份
-                if (UserType == 1)
-                {
-                    var client = new RestClient(Config.dbWebService);
-                    client.Timeout = Config.webServiceTimeOut * 1000;
-                    var request = new RestRequest("api/MoneySQ/JA_EMPOLYEE/CheckIDValidation", Method.POST);
-                    request.AddParameter("ID", ID, ParameterType.GetOrPost);
-                    request.AddHeader("cache-control", "no-cache");
-                    request.AddHeader("content-type", "application/json");
-                    IRestResponse response = client.Execute(request);
+                //string ID = DBProfile.GetProfile(MainApp.GlobalVariable.DBFile.FullName).ID;
+                //long UserType = DBProfile.GetUserType(ID, MainApp.GlobalVariable.DBFile.FullName);
+                ////員工身份
+                //if (UserType == 1)
+                //{
+                //    var client = new RestClient(Config.dbWebService);
+                //    client.Timeout = Config.webServiceTimeOut * 1000;
+                //    var request = new RestRequest("api/MoneySQ/JA_EMPOLYEE/CheckIDValidation", Method.POST);
+                //    request.AddParameter("ID", ID, ParameterType.GetOrPost);
+                //    request.AddHeader("cache-control", "no-cache");
+                //    request.AddHeader("content-type", "application/json");
+                //    IRestResponse response = client.Execute(request);
 
-                    if (response.ErrorMessage != null && response.ErrorMessage != "")
-                    {
-                        Common.LogHelper.MoneySQLogger.LogInfo<MainActivity>(response.ErrorMessage);
-                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                        alert.SetCancelable(false);
-                        alert.SetTitle("檢查ID有效性錯誤通知");
-                        alert.SetMessage(response.ErrorMessage);
-                        alert.SetNegativeButton("確定", ExistSystem);
-                        alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
-                        alert.Show();
-                    }
-                    else
-                    {
-                        if (!Convert.ToBoolean(response.Content))
-                        {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                            alert.SetCancelable(false);
-                            alert.SetTitle("檢查ID有效性結果通知");
-                            alert.SetMessage("你的ID已失效,App將終止執行");
-                            alert.SetNegativeButton("確定", ExistSystem);
-                            alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
-                            alert.Show();
-                        }
-                    }
+                //    if (response.ErrorMessage != null && response.ErrorMessage != "")
+                //    {
+                //        Common.LogHelper.MoneySQLogger.LogInfo<MainActivity>(response.ErrorMessage);
+                //        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                //        alert.SetCancelable(false);
+                //        alert.SetTitle("檢查ID有效性錯誤通知");
+                //        alert.SetMessage(response.ErrorMessage);
+                //        alert.SetNegativeButton("確定", ExistSystem);
+                //        alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
+                //        alert.Show();
+                //    }
+                //    else
+                //    {
+                //        if (!Convert.ToBoolean(response.Content))
+                //        {
+                //            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                //            alert.SetCancelable(false);
+                //            alert.SetTitle("檢查ID有效性結果通知");
+                //            alert.SetMessage("你的ID已失效,App將終止執行");
+                //            alert.SetNegativeButton("確定", ExistSystem);
+                //            alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
+                //            alert.Show();
+                //        }
+                //    }
+                //}
+                ////客戶身份
+                //else if (UserType == 2)
+                //{
+
+                //}
+                while (!LoginService.IsIDValidationDone)
+                {
                 }
-                //客戶身份
-                else if (UserType == 2)
+                if (LoginService.IsIDValidationDone && LoginService.IDValidationError.Length > 0)
                 {
-
+                    Common.LogHelper.MoneySQLogger.LogInfo<MainActivity>(LoginService.IDValidationError);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                    alert.SetCancelable(false);
+                    alert.SetTitle("檢查ID有效性");
+                    alert.SetMessage(LoginService.IDValidationError);
+                    alert.SetNegativeButton("確定", (sender, args) => { });
+                    alert.SetIcon(Android.Resource.Drawable.IcDialogInfo);
+                    alert.Show();
                 }
             }
         }
@@ -339,7 +372,7 @@ namespace MessageClient
                                 request.AddHeader("content-type", "application/json");
                                 response = client.Execute(request);
                                 builder.Dismiss();
-                                Intent EmsService = new Intent(this, typeof(MessageClient.Services.EMSService));
+                                Intent EmsService = new Intent(this, typeof(Services.EMSService));
                                 StopService(EmsService);
                                 if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
                                 {
@@ -395,7 +428,7 @@ namespace MessageClient
                     Profile.ID = LoginView.txtID.Text.Trim();
                     DBProfile.InsertProfile(Profile, MainApp.GlobalVariable.DBFile.FullName);
                     builder.Dismiss();
-                    Intent EmsService = new Intent(this, typeof(MessageClient.Services.EMSService));
+                    Intent EmsService = new Intent(this, typeof(Services.EMSService));
                     StopService(EmsService);
                     if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
                     {
@@ -506,7 +539,7 @@ namespace MessageClient
                 String priKeyxml = CipherHelper.RSAPrivateKeyJava2DotNet(KPG.GetPrivateKeyString());
 
                 //設定明文資料
-                MessageClient.Messager.loanApplication_customer cust = new MessageClient.Messager.loanApplication_customer();
+                Messager.loanApplication_customer cust = new Messager.loanApplication_customer();
                 cust.pk = 20;
                 cust.order_nbr = "00000016";
                 cust.country = "TWN";
@@ -522,7 +555,7 @@ namespace MessageClient
                 cust.add_1 = "新北市土城區金城路三段12號14樓";
                 cust.add_2 = "新北市土城區金城路三段12號14樓";
 
-                MessageClient.Messager.loanApplication_customer cust1 = new MessageClient.Messager.loanApplication_customer();
+                Messager.loanApplication_customer cust1 = new Messager.loanApplication_customer();
                 cust1.pk = 16;
                 cust1.order_nbr = "00000152";
                 cust1.country = "TWN";
@@ -538,7 +571,7 @@ namespace MessageClient
                 cust1.add_1 = "台北市中山區長安東路1段16號7樓之1";
                 cust1.add_2 = "台北市中山區長安東路1段16號7樓之1";
 
-                List<MessageClient.Messager.loanApplication_customer> lstCust = new List<MessageClient.Messager.loanApplication_customer>();
+                List<Messager.loanApplication_customer> lstCust = new List<Messager.loanApplication_customer>();
                 lstCust.Add(cust);
                 lstCust.Add(cust1);
                 string plaintxt = JsonConvert.SerializeObject(lstCust);
@@ -554,7 +587,7 @@ namespace MessageClient
                 //string plaintxt1 = CipherHelper.RSADecrypt(priKeyxml, ciphertxt);
 
                 //Use MQ傳送明文,簽章,公鑰給server begin
-                MessageClient.Messager.SignMessage sm = new MessageClient.Messager.SignMessage();
+                Messager.SignMessage sm = new Messager.SignMessage();
                 sm.plainText = plaintxt;
                 sm.cipherText = ciphertxt;
                 sm.sign = sign;
@@ -655,7 +688,7 @@ namespace MessageClient
                 String priKeyxml = CipherHelper.RSAPrivateKeyJava2DotNet(KPG.GetPrivateKeyString());
 
                 //設定明文資料
-                MessageClient.Messager.loanApplication_customer cust = new MessageClient.Messager.loanApplication_customer();
+                Messager.loanApplication_customer cust = new Messager.loanApplication_customer();
                 cust.pk = 20;
                 cust.order_nbr = "00000016";
                 cust.country = "TWN";
@@ -663,7 +696,7 @@ namespace MessageClient
                 cust.customer_type = "第三人(擔保人)";
                 cust.nickname = "王勝達";
 
-                MessageClient.Messager.loanApplication_customer cust1 = new MessageClient.Messager.loanApplication_customer();
+                Messager.loanApplication_customer cust1 = new Messager.loanApplication_customer();
                 cust1.pk = 16;
                 cust1.order_nbr = "00000152";
                 cust1.country = "TWN";
@@ -671,7 +704,7 @@ namespace MessageClient
                 cust1.customer_type = "第三人(擔保人)";
                 cust1.nickname = "廖一民";
 
-                List<MessageClient.Messager.loanApplication_customer> lstCust = new List<MessageClient.Messager.loanApplication_customer>();
+                List<Messager.loanApplication_customer> lstCust = new List<Messager.loanApplication_customer>();
                 lstCust.Add(cust);
                 lstCust.Add(cust1);
                 string plaintxt = JsonConvert.SerializeObject(lstCust);
@@ -687,7 +720,7 @@ namespace MessageClient
                 //string plaintxt1 = CipherHelper.RSADecrypt(priKeyxml, ciphertxt);
 
                 //Use MQ傳送明文,簽章,公鑰給server begin
-                MessageClient.Messager.SignMessage sm = new MessageClient.Messager.SignMessage();
+                Messager.SignMessage sm = new Messager.SignMessage();
                 sm.plainText = plaintxt;
                 sm.cipherText = ciphertxt;
                 sm.sign = sign;

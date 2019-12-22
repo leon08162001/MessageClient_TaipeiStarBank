@@ -59,16 +59,6 @@ namespace MessageClient
                     //txtMessage.ScrollTo(0, 0);
                     scrollMessage.ScrollTo(0, 0);
                 }
-                else if (this.Intent.HasExtra("MQJefferiesExcuReportMessage"))
-                {
-                    txtSendedMessageTime.Text = MainApp.GlobalVariable.SendedMessageTime;
-                    txtReceivedMessageTime.Text = MainApp.GlobalVariable.ReceivedMessageTime;
-                    txtSubject.Text = MainApp.GlobalVariable.Subject;
-                    txtMessage.Text = MainApp.GlobalVariable.MessageText;
-                    //txtMessage.ScrollTo(0, 0);
-                    scrollMessage.ScrollTo(0, 0);
-                    this.Intent.RemoveExtra("MQJefferiesExcuReportMessage");
-                }
                 else if (this.Intent.HasExtra("EMSJefferiesExcuReportMessage"))
                 {
                     txtSendedMessageTime.Text = MainApp.GlobalVariable.SendedMessageTime;
@@ -83,7 +73,7 @@ namespace MessageClient
                 //txtAttachments.TextFormatted = Android.Text.Html.FromHtml(value);
                 ////txtAttachments.SetText(value,TextView.BufferType.Normal);
                 //Linkify.AddLinks(txtAttachments,MatchOptions.All);
-                ////txtAttachments.MovementMethod = new Android.Text.Method.LinkMovementMethod();
+                txtAttachments.MovementMethod = new Android.Text.Method.ScrollingMovementMethod();
             }
             catch (Exception ex)
             {
@@ -113,6 +103,7 @@ namespace MessageClient
                     AttachmentsSetting();
                     //txtMessage.ScrollTo(0, 0);
                     scrollMessage.ScrollTo(0, 0);
+                    txtAttachments.MovementMethod = new Android.Text.Method.ScrollingMovementMethod();
                     this.Parent.Intent.RemoveExtra("HistroyMessage");
                 }
             }
@@ -185,7 +176,7 @@ namespace MessageClient
                 DBProfile.ClearProfile(MainApp.GlobalVariable.DBFile.FullName);
                 DBProfile.InsertProfile(Profile, MainApp.GlobalVariable.DBFile.FullName);
                 builder.Dismiss();
-                Intent EmsService = new Intent(this, typeof(MessageClient.Services.EMSService));
+                Intent EmsService = new Intent(this, typeof(Services.EMSService));
                 StopService(EmsService);
                 if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
                 {
@@ -216,7 +207,14 @@ namespace MessageClient
                 screen = Bitmap.CreateBitmap(view.DrawingCache);
                 view.DrawingCacheEnabled = false;
                 string FolderPath = "";
-                FolderPath = Application.Context.GetExternalFilesDir("").AbsolutePath;
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
+                {
+                    FolderPath = Application.Context.GetExternalFilesDir("").AbsolutePath;
+                }
+                else
+                {
+                    FolderPath = Application.Context.GetExternalFilesDir("").AbsolutePath;
+                }
                 DirectoryInfo FolderInfo = new DirectoryInfo(FolderPath + @"/Screen");
                 if (!FolderInfo.Exists)
                 {
@@ -245,7 +243,14 @@ namespace MessageClient
         {
             string FolderPath = "";
             string PackageName = Application.Context.PackageName;
-            FolderPath = Application.Context.GetExternalFilesDir("").AbsolutePath;
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
+            {
+                FolderPath = Application.Context.GetExternalFilesDir("").AbsolutePath;
+            }
+            else
+            {
+                FolderPath = Application.Context.GetExternalFilesDir("").AbsolutePath;
+            }
             DirectoryInfo FolderInfo = new DirectoryInfo(FolderPath + @"/Attachment" + @"/" + MainApp.GlobalVariable.MessageID);
             Android.Net.Uri selectedUri = Android.Net.Uri.Parse(FolderInfo.FullName);
 

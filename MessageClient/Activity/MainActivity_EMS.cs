@@ -372,17 +372,21 @@ namespace MessageClient
                                 request.AddHeader("content-type", "application/json");
                                 response = client.Execute(request);
                                 builder.Dismiss();
-                                Intent EmsService = new Intent(this, typeof(Services.EMSService));
-                                StopService(EmsService);
-                                if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
-                                {
-                                    StartForegroundService(EmsService);
-                                }
-                                else
-                                {
-                                    StartService(EmsService);
-                                }
+                                LoginService.IsIDValidationDone = true;
                                 Toast.MakeText(this, "設定完成接收推播的ID!", ToastLength.Long).Show();
+                                Task.Run(() =>
+                                {
+                                    Intent EmsService = new Intent(this, typeof(Services.EMSService));
+                                    StopService(EmsService);
+                                    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                                    {
+                                        StartForegroundService(EmsService);
+                                    }
+                                    else
+                                    {
+                                        StartService(EmsService);
+                                    }
+                                });
                             }
                             else
                             {

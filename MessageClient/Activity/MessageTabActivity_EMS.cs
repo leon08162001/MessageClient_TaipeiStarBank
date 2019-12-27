@@ -255,11 +255,11 @@ namespace MessageClient
             Android.Net.Uri selectedUri = Android.Net.Uri.Parse(FolderInfo.FullName);
 
             Intent intent = null;
-            if (PackageManager.GetLaunchIntentForPackage(Config.folderApp1) != null)
+            if (Config.folderApp1 != null && PackageManager.GetLaunchIntentForPackage(Config.folderApp1) != null)
             {
                 intent = PackageManager.GetLaunchIntentForPackage(Config.folderApp1);
             }
-            else if (PackageManager.GetLaunchIntentForPackage(Config.folderApp2) != null)
+            else if (Config.folderApp2 != null && PackageManager.GetLaunchIntentForPackage(Config.folderApp2) != null)
             {
                 intent = PackageManager.GetLaunchIntentForPackage(Config.folderApp2);
             }
